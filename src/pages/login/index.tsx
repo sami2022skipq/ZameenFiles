@@ -4,7 +4,7 @@ import type { FC } from 'react';
 import './index.less';
 
 import { Button, Card, Checkbox, Form, Input, Spin } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
@@ -16,8 +16,11 @@ import { handleLogin, notificationCallback } from '@/stores/global.store';
 import { ILoginActions } from '@/utils/golobaldata';
 import { updateToken } from '@/utils/http';
 
+import CreateAccount from './createacc';
+
 const LoginForm: FC = () => {
   const dispatch = useDispatch();
+  const [open, setOpen] = useState<boolean>(false);
   const { formatMessage } = useLocale();
   const mutateLogin = useMutation(userLogin);
 
@@ -146,8 +149,12 @@ const LoginForm: FC = () => {
               </Button>
             </Form.Item>
           </Form>
+          <Button type="link" className="login-page-form_button" onClick={() => setOpen(true)}>
+            Create Account
+          </Button>
         </Card>
       </div>
+      {open && <CreateAccount open={open} setOpen={setOpen} />}
     </Spin>
   );
 };
