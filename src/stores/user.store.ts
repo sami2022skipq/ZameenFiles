@@ -34,9 +34,12 @@ const userSlice = createSlice({
 
       Object.assign(state, action.payload);
     },
+    setuserDetails(state, action: PayloadAction<Partial<UserState>>) {
+      state.userDetails = action.payload;
+    },
   },
 });
 
-export const { setUserItem } = userSlice.actions;
+export const { setUserItem, setuserDetails } = userSlice.actions;
 
 export default userSlice.reducer;

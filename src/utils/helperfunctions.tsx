@@ -1,3 +1,5 @@
+import { NOTIFICATIONTYPE } from '@/interface/notifications';
+
 export function checkMobileScreen() {
   let check = false;
 
@@ -16,3 +18,44 @@ export function checkMobileScreen() {
 
   return check;
 }
+
+export const handleErrorResponse = (error: any, dispatch: any, notificationCallback: any) => {
+  console.log(error, 'error');
+
+  if (error.response && error.response.data && error.response.data.error) {
+    const errorMessage = error.response.data.error;
+
+    dispatch(
+      notificationCallback({
+        type: NOTIFICATIONTYPE.ERROR,
+        info: errorMessage,
+      }),
+    );
+  } else if (error.response && error.response.data && Array.isArray(error.response.data.errors)) {
+    const errorMessages = error.response.data.errors.map(errorItem => errorItem.msg).join(', ');
+
+    dispatch(
+      notificationCallback({
+        type: NOTIFICATIONTYPE.ERROR,
+        info: errorMessages,
+      }),
+    );
+  } else if (error.response && error.response.data && error.response.data.message) {
+    const errorMessage = error.response.data.message;
+
+    dispatch(
+      notificationCallback({
+        type: NOTIFICATIONTYPE.ERROR,
+        info: errorMessage,
+      }),
+    );
+  } else {
+    console.log(error, 'error response');
+    dispatch(
+      notificationCallback({
+        type: NOTIFICATIONTYPE.ERROR,
+        info: `${error?.message}`,
+      }),
+    );
+  }
+};

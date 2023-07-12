@@ -16,7 +16,6 @@ import { getFirstPathCode } from '@/utils/getFirstPathCode';
 import { getGlobalState } from '@/utils/getGloabal';
 import { ILoginActions } from '@/utils/golobaldata';
 
-import { useGuide } from '../../guide/useGuide';
 import HeaderComponent from '../header';
 import MenuComponent from '../menu';
 import TagsView from '../tagView';
@@ -34,20 +33,11 @@ const PrivateLayout: FC = () => {
   const [openKey, setOpenkey] = useState<string>();
   const [selectedKey, setSelectedKey] = useState<string>(location.pathname);
 
-  const { device, collapsed, newUser } = useSelector(state => state.user);
+  const { device, collapsed } = useSelector(state => state.user);
   const token = antTheme.useToken();
 
   const isMobile = device === 'MOBILE';
   const dispatch = useDispatch();
-  const { driverStart } = useGuide();
-
-  // useEffect(() => {
-  //   if (localStorage.getItem('_expiredTime') === null && !localStorage.getItem('pathName')) {
-  //     setCustomTimeout(0);
-  //   } else {
-  //     setCustomTimeout(15);
-  //   }
-  // }, []);
 
   useEffect(() => {
     const code = getFirstPathCode(location.pathname);
@@ -105,12 +95,8 @@ const PrivateLayout: FC = () => {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    newUser && driverStart();
-  }, [newUser]);
-
   if (!isUserLogin) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/auth/login" />;
   }
 
   useEffect(() => {
@@ -198,11 +184,11 @@ const PrivateLayout: FC = () => {
         )}
         <Content className="layout-page-content">
           <TagsView />
-          {isTimeout && (
+          {!isTimeout && (
             <Modal
               width={570}
               closable={false}
-              open={isTimeout}
+              open={false}
               maskClosable={false}
               maskStyle={{ backdropFilter: 'blur(2.5px)' }}
               footer={[

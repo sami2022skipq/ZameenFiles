@@ -102,7 +102,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             </span>
           </Tooltip>
           <HeaderNoticeComponent />
-          <Dropdown
+          {/* <Dropdown
             menu={{
               onClick: info => selectLocale(info),
               items: [
@@ -124,21 +124,12 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             <span>
               <LanguageSvg id="language-change" />
             </span>
-          </Dropdown>
+          </Dropdown> */}
 
           {isUserLogin ? (
             <Dropdown
               menu={{
                 items: [
-                  {
-                    key: '1',
-                    icon: <UserOutlined />,
-                    label: (
-                      <span onClick={() => navigate('/dashboard')}>
-                        <LocaleFormatter id="header.avator.account" />
-                      </span>
-                    ),
-                  },
                   {
                     key: '2',
                     icon: <LogoutOutlined />,
