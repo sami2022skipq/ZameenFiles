@@ -2,18 +2,18 @@ import axios from 'axios';
 
 import { DecriptionData } from './encription';
 
-const localIP = 'http://52.14.222.13334:3003/';
+const localIP = 'http://3.89.21.237:5000/api/';
 
 let NodeBaseURL = ``;
 const host = window.location.hostname;
 
-if (host && host === 'http://52.14.222.13334:3003/') {
+if (host && host === 'http://44.198.156.49:5000/api/') {
   // set online server endpoints
 
-  NodeBaseURL = `https://http://52.14.222.13334:3003//api`;
-} else if (host && host === 'http://52.14.222.13334:3003/') {
+  NodeBaseURL = `https://http://44.198.156.49:5000/api//api`;
+} else if (host && host === 'http://44.198.156.49:5000/api/') {
   // Staging server endpoints
-  NodeBaseURL = `https://http://52.14.222.13334:3003/`;
+  NodeBaseURL = `http://44.198.156.49:5000/api/`;
 } else {
   // local development
   NodeBaseURL = localIP;
@@ -28,14 +28,14 @@ export const encriptionData = localStorage.getItem('auth');
 const access_token = encriptionData ? DecriptionData(encriptionData) : '';
 
 export const updateToken = (token: string) => {
-  http.defaults.headers.common.Authorization = `Bearer ${token}`;
+  http.defaults.headers.common['Auth-Token'] = `${token}`;
   http.defaults.headers['Access-Control-Allow-Origin'] = '*';
 };
 
 console.log(access_token?.payload?.result, 'sss');
 
 if (access_token) {
-  updateToken(access_token?.payload?.result?.accessToken);
+  updateToken(access_token?.payload);
 }
 
 export { NodeBaseURL };

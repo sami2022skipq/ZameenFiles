@@ -7,13 +7,14 @@ import { Button, Card, Checkbox, Form, Input, Spin } from 'antd';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import { userLogin } from '@/api/user.api';
 import { NOTIFICATIONTYPE } from '@/interface/notifications';
 import { LocaleFormatter, useLocale } from '@/locales';
 import { handleLogin, notificationCallback } from '@/stores/global.store';
 import { ILoginActions } from '@/utils/golobaldata';
+import { handleErrorResponse } from '@/utils/helperfunctions';
 import { updateToken } from '@/utils/http';
 
 import CreateAccount from './createacc';
@@ -21,7 +22,7 @@ import CreateAccount from './createacc';
 const LoginForm: FC = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState<boolean>(false);
-  const { formatMessage } = useLocale();
+
   const mutateLogin = useMutation(userLogin);
 
   const { mutate: mutateUserLogin, isLoading, data, isError, error } = mutateLogin;
@@ -33,33 +34,16 @@ const LoginForm: FC = () => {
     try {
       await mutateUserLogin(form, {
         onSuccess: (res: any) => {
-          <Navigate to="/dashboard" />;
+          <Navigate to="/app/dashboard" />;
           dispatch(
             notificationCallback({
               type: NOTIFICATIONTYPE.SUCCESS,
-              info: `${res?.data?.message}`,
+              info: `successfully logged in`,
             }),
           );
         },
         onError: (error: any) => {
-          if (error.response && error.response.data) {
-            const { message: errorMessage } = error.response.data;
-
-            dispatch(
-              notificationCallback({
-                type: NOTIFICATIONTYPE.ERROR,
-                info: `${errorMessage}`,
-              }),
-            );
-          } else {
-            console.log(error, 'error response');
-            dispatch(
-              notificationCallback({
-                type: NOTIFICATIONTYPE.ERROR,
-                info: `${error?.message}`,
-              }),
-            );
-          }
+          handleErrorResponse(error, dispatch, notificationCallback);
         },
       });
     } catch (error) {
@@ -67,17 +51,17 @@ const LoginForm: FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (data?.data?.result) {
-      const { accessToken } = data.data?.result;
+  console.log(data?.data?.authToken, 'data');
 
+  useEffect(() => {
+    if (data?.data?.authToken) {
       dispatch(
         handleLogin({
           type: ILoginActions.LOGIN,
-          payload: data.data,
+          payload: data.data?.authToken,
         }),
       );
-      updateToken(accessToken);
+      updateToken(data?.data?.authToken);
     } else if (errorRes && isError) {
       if (errorRes && errorRes.response && errorRes.response.data) {
         const { message } = errorRes.response.data;
@@ -106,7 +90,7 @@ const LoginForm: FC = () => {
           <Form<LoginParams> onFinish={onFinished} className="login-page-form">
             <h2>Real Estate</h2>
             <Form.Item
-              name="username"
+              name="email"
               rules={[
                 {
                   required: true,
@@ -114,35 +98,30 @@ const LoginForm: FC = () => {
                 },
               ]}
             >
-              <Input
-                placeholder={formatMessage({
-                  id: 'gloabal.tips.username',
-                })}
-              />
+              <Input placeholder="Please enter email" />
             </Form.Item>
             <Form.Item
               name="password"
               rules={[
                 {
                   required: true,
-                  message: formatMessage({
-                    id: 'gloabal.tips.enterPasswordMessage',
-                  }),
+                  message: 'Please input your password!',
                 },
               ]}
             >
-              <Input
-                type="password"
-                placeholder={formatMessage({
-                  id: 'gloabal.tips.password',
-                })}
-              />
+              <Input.Password />
             </Form.Item>
-            <Form.Item name="remember" valuePropName="checked">
-              <Checkbox>
-                <LocaleFormatter id="gloabal.tips.rememberUser" />
-              </Checkbox>
-            </Form.Item>
+
+            <div className="flex justifySpaceBetween">
+              <Form.Item name="remember" valuePropName="checked">
+                <Checkbox>
+                  <LocaleFormatter id="gloabal.tips.rememberUser" />
+                </Checkbox>
+              </Form.Item>
+              <Link to="/auth/forget/password">
+                <Button type="text">Forget Password?</Button>
+              </Link>
+            </div>
             <Form.Item>
               <Button htmlType="submit" type="primary" className="login-page-form_button">
                 <LocaleFormatter id="gloabal.tips.login" />

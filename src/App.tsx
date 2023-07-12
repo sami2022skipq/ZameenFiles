@@ -6,13 +6,16 @@ import zhCN from 'antd/es/locale/zh_CN';
 import dayjs from 'dayjs';
 import { Suspense, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
+import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { history, HistoryRouter } from '@/routes/history';
 
+import { getUserData } from './api/user.api';
 import { localeConfig, LocaleFormatter } from './locales';
 import RenderRouter from './routes';
 import { setGlobalState } from './stores/global.store';
+import { setuserDetails } from './stores/user.store';
 
 const App: React.FC = () => {
   const { locale } = useSelector(state => state.user);
@@ -65,6 +68,16 @@ const App: React.FC = () => {
       return zhCN;
     }
   };
+
+  console.log('inside app js');
+
+  const { data: singleuserData, isLoading } = useQuery(['get_single_users_data'], getUserData);
+
+  useEffect(() => {
+    if (singleuserData) {
+      dispatch(setuserDetails(singleuserData?.data));
+    }
+  }, [singleuserData]);
 
   return (
     <ConfigProvider

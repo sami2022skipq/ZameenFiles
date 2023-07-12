@@ -1,15 +1,18 @@
 import './style.less';
 
 import { UserOutlined } from '@ant-design/icons';
-import { Affix, Anchor, Button, Drawer, Dropdown, Menu } from 'antd';
+import { Anchor, Button, Drawer, Dropdown, Menu } from 'antd';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import logoImg from '@/assets/logo/logo.png';
 
 const { Link } = Anchor;
 
 function AppHeader() {
+  const userDetails = useSelector(state => state?.user?.userDetails);
+
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -23,13 +26,17 @@ function AppHeader() {
 
   const handleMenuClick = (e: any) => {
     if (e.key === '1') {
-      navigate('/app/account');
+      for (let i = 0; i < 3; i++) {
+        navigate('/app/user/listing/manage');
+      }
     }
   };
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">Account</Menu.Item>
+      <Menu.Item key="1">
+        <a href="/app/user/listing/manage"></a>
+      </Menu.Item>
       <Menu.Item key="2">Personal Info</Menu.Item>
       <Menu.Item key="3">Logout</Menu.Item>
     </Menu>
@@ -56,7 +63,7 @@ function AppHeader() {
           <Button type="primary" onClick={showDrawer}>
             <i className="fas fa-bars"></i>
           </Button>
-          <Drawer placement="right" closable={false} onClose={onClose} visible={visible}>
+          <Drawer placement="right" closable={false} onClose={onClose} open={visible}>
             <Anchor targetOffset={65}>
               <Link href="#hero" title="Home" />
               <Link href="#about" title="About" />
@@ -69,10 +76,33 @@ function AppHeader() {
           </Drawer>
         </div>
         <div className="userIcon">
-          <Dropdown overlay={menu} placement="bottomRight">
-            <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-              <UserOutlined />
-            </a>
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: '1',
+                  icon: <UserOutlined />,
+                  label: <a href="/app/user/listing/manage">Account</a>,
+                },
+
+                {
+                  key: '2',
+                  icon: <UserOutlined />,
+                  label: <a href="/app/user/settings">User Profile</a>,
+                },
+
+                {
+                  key: '3',
+                  icon: <UserOutlined />,
+                  label: <span>Logout</span>,
+                },
+              ],
+            }}
+            placement="bottomRight"
+          >
+            <span className="ant-dropdown-link" style={{ cursor: 'pointer' }}>
+              <UserOutlined /> {userDetails ? userDetails?.name : ''}
+            </span>
           </Dropdown>
         </div>
       </div>

@@ -13,13 +13,13 @@ const mockMenuList: MenuList | any = [
     path: '/dashboard',
   },
   {
-    code: 'UserManager',
+    code: 'UserListing',
     label: {
       zh_CN: '文档',
-      en_US: 'User Manager',
+      en_US: 'User Listing',
     },
     icon: 'users',
-    path: '/user/manage',
+    path: '/user/listing',
   },
   {
     code: 'documentation',
