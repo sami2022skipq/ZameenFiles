@@ -1,9 +1,21 @@
-import { CarryOutFilled, HomeFilled, TagsFilled } from '@ant-design/icons';
+import {
+  ApartmentOutlined,
+  AreaChartOutlined,
+  BoxPlotOutlined,
+  CarryOutFilled,
+  DollarOutlined,
+  FieldTimeOutlined,
+  HomeFilled,
+  MailOutlined,
+  MobileOutlined,
+  PhoneOutlined,
+  TagsFilled,
+} from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Form, Input, InputNumber, Row, Select, Space, Spin, Switch } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { createAdd, getSingleNotes, updateAdd } from '@/api/listsing';
@@ -25,6 +37,23 @@ const CreateAd = () => {
   const dispatch = useDispatch();
   const { mutate: mutateUserSingup, isLoading: createLoading } = useMutation(createAdd);
   const { mutate: mutateUpdate, isLoading: updateLoading } = useMutation(updateAdd);
+  const userDetails = useSelector(state => state?.user?.userDetails);
+
+  useEffect(() => {
+    if (userDetails) {
+      const { email, mobile, landLine, whatsApp, phoneNumber } = userDetails;
+
+      const setFieldsValue = {
+        email,
+        mobile,
+        landLine,
+        whatsApp,
+        phoneNumber,
+      };
+
+      form.setFieldsValue(setFieldsValue);
+    }
+  }, [form, userDetails]);
 
   const { data: dataById, isLoading } = useQuery(
     [`get-single-user-single-note-${routeid}`, routeid],
@@ -151,7 +180,7 @@ const CreateAd = () => {
 
   return (
     <div>
-      <div className="full-width mt-20">
+      <div className="full-width ">
         <img src={Propertyimg} height={192} className="full-width" />
       </div>
       <Spin spinning={createLoading || updateLoading || isLoading}>
@@ -159,7 +188,7 @@ const CreateAd = () => {
           <Row>
             <Col md={3}></Col>
             <Col md={18}>
-              <Card className="mt-10">
+              <Card className="mt-10 main_card_auth ">
                 <Row align="middle">
                   <Col xs={24} md={6}>
                     <Row justify="center" align="middle">
@@ -173,8 +202,13 @@ const CreateAd = () => {
                   </Col>
                   <Col xs={24} md={18}>
                     <Row gutter={[16, 16]}>
-                      <Col xs={24} md={18}>
+                      {/* <Col xs={24} md={18}>
                         <Form.Item name="city" label="City">
+                        
+                        </Form.Item>
+                      </Col> */}
+                      <Col xs={24} md={18}>
+                        <Form.Item name="location" label="City" rules={[{ required: true }]}>
                           <Select size="large">
                             {cities?.map(item => {
                               return <Option value={item}>{item}</Option>;
@@ -182,9 +216,55 @@ const CreateAd = () => {
                           </Select>
                         </Form.Item>
                       </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Card>
+              <Card className="mt-10 main_card_auth ">
+                <Row align="middle">
+                  <Col xs={24} md={6}>
+                    <Row justify="center" align="middle">
+                      <Col md={24}>
+                        <Avatar shape="square" size={64} icon={<CarryOutFilled />} />
+                      </Col>
+                      <Col md={24}>
+                        <h1>Ad Information</h1>
+                      </Col>
+                    </Row>
+                  </Col>
+                  <Col xs={24} md={18}>
+                    <Row gutter={[16, 16]}>
                       <Col xs={24} md={18}>
-                        <Form.Item name="location" label="Location" rules={[{ required: true }]}>
-                          <Input className="full-width" size="large" />
+                        <Form.Item name="societyName" label="Society Name" rules={[{ required: true }]}>
+                          <Input className="full-width" size="large" prefix={<ApartmentOutlined />} />
+                        </Form.Item>
+                      </Col>
+
+                      <Col xs={24} md={18}>
+                        <Form.Item name="plotNumber" label="  Plot Number" rules={[{ required: true }]}>
+                          <InputNumber className="full-width" size="large" prefix={<BoxPlotOutlined />} />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} md={18}>
+                        <Form.Item name="yearOfPurchase" label="  Year Of Purchase" rules={[{ required: true }]}>
+                          <InputNumber className="full-width" size="large" prefix={<FieldTimeOutlined />} />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} md={18}>
+                        <Form.Item name="discription" label="Description" rules={[{ required: true }]}>
+                          <Input.TextArea className="full-width" size="large" rows={5} />
+                        </Form.Item>
+                      </Col>
+                      <Col xs={24} md={18}>
+                        <Form.Item name="balloted" label="Balloted">
+                          <Select size="large">
+                            <Option value={true} key="1">
+                              True
+                            </Option>
+                            <Option value={false} key="2">
+                              False
+                            </Option>
+                          </Select>
                         </Form.Item>
                       </Col>
                     </Row>
@@ -192,7 +272,7 @@ const CreateAd = () => {
                 </Row>
               </Card>
 
-              <Card className="mt-10">
+              <Card className="mt-10 main_card_auth">
                 <Row align="middle">
                   <Col xs={24} md={6}>
                     <Row justify="center" align="middle">
@@ -207,31 +287,16 @@ const CreateAd = () => {
                   <Col xs={24} md={18}>
                     <Row gutter={[16, 16]}>
                       <Col xs={24} md={18}>
-                        {/* <Form.Item label="Area" noStyle>
-                          <Row gutter={8}>
-                            <Col flex="70%">
-                              <Form.Item name={['address', 'size']}>
-                                <Input placeholder="Please enter" className="full-width" size="large" />
-                              </Form.Item>
-                            </Col>
-                            <Col flex="30%">
-                              <Form.Item name={['address', 'area']} noStyle>
-                                <Select size="large" placeholder="Please Select">
-                                  <Option value="Marla">Marla</Option>
-                                  <Option value="Kanal">Kanal</Option>
-                                  <Option value="Sq.Ft">Sq.Ft</Option>
-                                  <Option value="Sq-M">Sq-M</Option>
-                                  <Option value="Sq-Y">Sq-Y</Option>
-                                </Select>
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                        </Form.Item> */}
                         <Form.Item label="Area">
                           <Row gutter={8}>
                             <Col flex="70%">
                               <Form.Item name="area" noStyle>
-                                <InputNumber placeholder="Please enter" className="full-width" size="large" />
+                                <InputNumber
+                                  placeholder="Please enter"
+                                  className="full-width"
+                                  size="large"
+                                  prefix={<AreaChartOutlined />}
+                                />
                               </Form.Item>
                             </Col>
                             <Col flex="30%">
@@ -253,7 +318,12 @@ const CreateAd = () => {
                           <Row gutter={8}>
                             <Col flex="70%">
                               <Form.Item name="totalPrice" noStyle>
-                                <InputNumber placeholder="Please enter" className="full-width" size="large" />
+                                <InputNumber
+                                  placeholder="Please enter"
+                                  className="full-width"
+                                  size="large"
+                                  prefix={<DollarOutlined />}
+                                />
                               </Form.Item>
                             </Col>
                             <Col flex="30%">
@@ -268,7 +338,7 @@ const CreateAd = () => {
                         </Form.Item>
                       </Col>
                       <Col xs={24} md={18}>
-                        <div className="flex">
+                        <div className="flex justifySpaceBetween">
                           <span>
                             <h1>Installment available</h1>
                             <p>Enable if listing is available on installments</p>
@@ -328,59 +398,7 @@ const CreateAd = () => {
                 </Row>
               </Card>
 
-              <Card className="mt-10">
-                <Row align="middle">
-                  <Col xs={24} md={6}>
-                    <Row justify="center" align="middle">
-                      <Col md={24}>
-                        <Avatar shape="square" size={64} icon={<CarryOutFilled />} />
-                      </Col>
-                      <Col md={24}>
-                        <h1>Ad Information</h1>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col xs={24} md={18}>
-                    <Row gutter={[16, 16]}>
-                      <Col xs={24} md={18}>
-                        <Form.Item name="societyName" label="Society Name" rules={[{ required: true }]}>
-                          <Input className="full-width" size="large" />
-                        </Form.Item>
-                      </Col>
-
-                      <Col xs={24} md={18}>
-                        <Form.Item name="plotNumber" label="  Plot Number" rules={[{ required: true }]}>
-                          <InputNumber className="full-width" size="large" />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={18}>
-                        <Form.Item name="yearOfPurchase" label="  year Of Purchase" rules={[{ required: true }]}>
-                          <InputNumber className="full-width" size="large" />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={18}>
-                        <Form.Item name="discription" label="Description" rules={[{ required: true }]}>
-                          <Input.TextArea className="full-width" size="large" rows={5} />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={24} md={18}>
-                        <Form.Item name="balloted" label="Balloted">
-                          <Select size="large">
-                            <Option value={true} key="1">
-                              True
-                            </Option>
-                            <Option value={false} key="2">
-                              False
-                            </Option>
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </Card>
-
-              <Card className="mt-10">
+              <Card className="mt-10 main_card_auth">
                 <Row align="middle">
                   <Col xs={24} md={6}>
                     <Row justify="center" align="middle">
@@ -395,18 +413,18 @@ const CreateAd = () => {
                   <Col xs={24} md={18}>
                     <Row gutter={[16, 16]}>
                       <Col xs={24} md={18}>
-                        <Form.Item name="email" label="Email">
-                          <Input className="full-width" size="large" />
+                        <Form.Item name="email" label="Email" rules={[{ required: true }]}>
+                          <Input className="full-width" size="large" prefix={<MailOutlined />} />
                         </Form.Item>
                       </Col>
                       <Col xs={24} md={18}>
-                        <Form.Item name="phoneNumber" label="Mobile">
-                          <Input className="full-width" size="large" />
+                        <Form.Item name="phoneNumber" label="Mobile" rules={[{ required: true }]}>
+                          <Input className="full-width" size="large" prefix={<MobileOutlined />} />
                         </Form.Item>
                       </Col>
                       <Col xs={24} md={18}>
-                        <Form.Item name="Landline" label="Land Line">
-                          <Input className="full-width" size="large" />
+                        <Form.Item name="landLine" label="Land Line" rules={[{ required: true }]}>
+                          <Input className="full-width" size="large" prefix={<PhoneOutlined />} />
                         </Form.Item>
                       </Col>
                     </Row>

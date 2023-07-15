@@ -21,7 +21,7 @@ import img3 from '@/assets/img3.jpg';
 const SinglePropertyDetail = () => {
   return (
     <Card>
-      <div style={{ marginTop: '94px' }} />
+      <div />
 
       <Row className="mt-10" gutter={[16, 16]}>
         <Col xs={0} md={3} />

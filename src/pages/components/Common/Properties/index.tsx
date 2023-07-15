@@ -13,30 +13,6 @@ const { Meta } = Card;
 
 const AppProperties = () => {
   const [publicListing, setPublicListing] = useState<any>();
-  const data = [
-    { title: 'Card 1', description: 'Description 1' },
-    { title: 'Card 2', description: 'Description 2' },
-    { title: 'Card 3', description: 'Description 3' },
-    { title: 'Card 4', description: 'Description 4' },
-    { title: 'Card 5', description: 'Description 5' },
-    { title: 'Card 6', description: 'Description 6' },
-    { title: 'Card 7', description: 'Description 7' },
-    { title: 'Card 8', description: 'Description 8' },
-    { title: 'Card 9', description: 'Description 9' },
-    { title: 'Card 10', description: 'Description 10' },
-    { title: 'Card 11', description: 'Description 11' },
-    { title: 'Card 12', description: 'Description 12' },
-    { title: 'Card 8', description: 'Description 8' },
-    { title: 'Card 9', description: 'Description 9' },
-    { title: 'Card 10', description: 'Description 10' },
-    { title: 'Card 11', description: 'Description 11' },
-    { title: 'Card 12', description: 'Description 12' },
-    { title: 'Card 8', description: 'Description 8' },
-    { title: 'Card 9', description: 'Description 9' },
-    { title: 'Card 10', description: 'Description 10' },
-    { title: 'Card 11', description: 'Description 11' },
-    { title: 'Card 12', description: 'Description 12' },
-  ];
 
   const { data: ListingData, isLoading } = useQuery([`get_all_listing`], () => getAllListingPublic());
 
@@ -89,7 +65,7 @@ const AppProperties = () => {
           <Col md={8} sm={12} xs={24} lg={8} xl={8}>
             <Link to={IPropertyRoutes.DETAIL}>
               <Card
-                className="full-width"
+                className="full-width property_card"
                 hoverable
                 cover={
                   <div style={{ width: '100%' }}>
@@ -111,7 +87,7 @@ const AppProperties = () => {
           </Col>
           <Col md={8} sm={12} xs={24} lg={8} xl={8}>
             <Card
-              className="full-width"
+              className="full-width property_card"
               hoverable
               cover={
                 <div style={{ width: '100%' }}>
@@ -133,7 +109,7 @@ const AppProperties = () => {
 
           <Col md={8} sm={12} xs={24} lg={8} xl={8}>
             <Card
-              className="full-width"
+              className="full-width property_card"
               hoverable
               cover={
                 <div style={{ width: '100%' }}>
@@ -153,7 +129,7 @@ const AppProperties = () => {
             </Card>
           </Col>
 
-          <Col md={24}>
+          {/* <Col md={24}>
             <h1>Top Agents</h1>
           </Col>
           {data?.map((item: any, index) => {
@@ -184,7 +160,7 @@ const AppProperties = () => {
                 </Link>
               </Col>
             );
-          })}
+          })} */}
         </Row>
       </div>
     </>

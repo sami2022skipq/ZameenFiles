@@ -81,8 +81,9 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
     <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
       {device !== 'MOBILE' && (
         <div className="logo" style={{ width: collapsed ? 80 : 200 }}>
-          <img src={ReactSvg} alt="" style={{ marginRight: collapsed ? '2px' : '20px' }} />
-          <img src={AntdSvg} alt="" />
+          <a href="/">
+            <img src={ReactSvg} alt="" style={{ marginRight: collapsed ? '2px' : '20px' }} />
+          </a>
         </div>
       )}
       <div className="layout-page-header-main">

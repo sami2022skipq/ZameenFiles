@@ -1,9 +1,12 @@
 import './style.less';
 
 import {
+  BankFilled,
   CheckCircleFilled,
+  EnvironmentFilled,
   MailFilled,
   MessageFilled,
+  NumberOutlined,
   PhoneFilled,
   SafetyCertificateFilled,
   SearchOutlined,
@@ -20,6 +23,7 @@ import {
   Input,
   List,
   Pagination,
+  Rate,
   Row,
   Select,
   Switch,
@@ -34,10 +38,12 @@ import { paginationText } from '@/utils/paginationText';
 
 const PropertyDetail = () => {
   const [publicListing, setPublicListing] = useState<any>();
+  const [value, setValue] = useState(3);
   const [userPaginationConfig, setPaginationConfig] = useState({
     page: 1,
     pageSize: 10,
   });
+  const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
   const { page, pageSize } = userPaginationConfig;
 
@@ -103,8 +109,8 @@ const PropertyDetail = () => {
 
   return (
     <Card>
-      <Affix>
-        <Card style={{ marginTop: '90px' }} className="search_field">
+      <Affix offsetTop={68}>
+        <Card className="search_field">
           <div className="flex">
             <Input placeholder="City, community, or building" />
             <Select placeholder="Select" className="ml-10" />
@@ -133,7 +139,15 @@ const PropertyDetail = () => {
               return (
                 <Col md={24} key={index}>
                   <Link to="/property/detail">
-                    <Card className="mt-20" title={item?.societyName}>
+                    <Card
+                      className="mt-20 main_card"
+                      title={
+                        <>
+                          <BankFilled className="mr-5" />
+                          {item?.societyName}
+                        </>
+                      }
+                    >
                       <Row gutter={[16, 16]}>
                         <Col md={10}>
                           <Carousel effect="fade" autoplay>
@@ -145,10 +159,20 @@ const PropertyDetail = () => {
 
                         <Col md={14}>
                           <span className="flex justifySpaceBetween">
-                            <p className="ml-10">{item?.societyName}</p>
-                            <p className="mr-10">{item?.location}</p>
+                            <p className="mr-10">
+                              {
+                                <>
+                                  <EnvironmentFilled className="mr-5" />
+                                  <b>{item?.location}</b>
+                                </>
+                              }
+                            </p>
+                            <p className="ml-10">
+                              <NumberOutlined className="mr-5" />
+                              <b>Plot No: {item?.plotNumber}</b>
+                            </p>
                           </span>
-                          <h1>Area-{item?.area}</h1>
+                          <h3>Area-{item?.area} Marla</h3>
                           <Divider />
                           <span className="flex">
                             <Tag color="green">Dream Apt</Tag>
@@ -162,8 +186,10 @@ const PropertyDetail = () => {
                               {' '}
                               Balloted <Divider type="vertical" />
                             </b>
-                            <b> {item?.balloted === true ? 'YES' : 'NO'} </b>{' '}
-                            <Divider type="vertical" style={{ fontSize: '18px !important', fontWeight: 'bold' }} />
+                            <b>
+                              {' '}
+                              {item?.balloted !== true ? <Tag color="red">No</Tag> : <Tag color="green">Yes</Tag>}{' '}
+                            </b>{' '}
                             {/* <b>
                               {' '}
                               Residential <Divider type="vertical" />
@@ -182,10 +208,17 @@ const PropertyDetail = () => {
                             </span>
                             <span>
                               <div className="flex mt-10">
-                                <Button type="default" className="btn_call_email">
+                                <Button
+                                  type="default"
+                                  className="btn_call_email"
+                                  onClick={() => (window.location.href = `tel:${item?.phoneNumber}`)}
+                                >
                                   <PhoneFilled /> Call
                                 </Button>
-                                <Button className="btn_call_email">
+                                <Button
+                                  className="btn_call_email"
+                                  onClick={() => (window.location.href = `mailto:${item?.email}`)}
+                                >
                                   <MailFilled /> Email
                                 </Button>
                                 <Button className="btn_whatsapp">
@@ -218,7 +251,7 @@ const PropertyDetail = () => {
             </Col>
           </Row>
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <List
             className="mt-20"
             size="large"
@@ -226,7 +259,14 @@ const PropertyDetail = () => {
             footer={null}
             bordered
             dataSource={data}
-            renderItem={item => <List.Item>{item}</List.Item>}
+            renderItem={item => (
+              <List.Item className="flex justifySpaceBetween">
+                <span>{item} </span>
+                <span>
+                  <Rate tooltips={desc} onChange={setValue} value={value} />
+                </span>
+              </List.Item>
+            )}
           />
         </Col>
       </Row>
