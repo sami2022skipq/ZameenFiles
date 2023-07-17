@@ -35,7 +35,7 @@ const ResetPassword = () => {
 
   return (
     <div className="login-page">
-      <Card>
+      <Card className="main_card_auth">
         <Spin spinning={isLoading}>
           <Form className="login-page-form" onFinish={OnFinsish}>
             <h2>Real Estate</h2>

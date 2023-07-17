@@ -5,6 +5,7 @@ import { lazy } from 'react';
 import { Navigate } from 'react-router';
 import { useRoutes } from 'react-router-dom';
 
+import ContactUs from '@/pages/components/Common/Contactus';
 import Dashboard from '@/pages/dashboard';
 import LayoutPage from '@/pages/layout';
 import PublicLayout from '@/pages/layout/Layouts/public';
@@ -26,6 +27,7 @@ const Home = lazy(() => import(`@/pages/Home/index`));
 const ClientDetails = lazy(() => import(`@/pages/Clientdetails/index`));
 const PropertDetail = lazy(() => import(`@/pages/Properties/index`));
 const SinglePropertyDetail = lazy(() => import(`@/pages/Properties/view`));
+
 const routeList: RouteObject[] = [
   {
     path: '',
@@ -34,6 +36,10 @@ const routeList: RouteObject[] = [
       {
         path: '',
         element: <WrapperRouteComponent element={<Home />} titleId="Home" />,
+      },
+      {
+        path: 'contactus',
+        element: <WrapperRouteComponent element={<ContactUs />} titleId="Home" />,
       },
       {
         path: '/client/details',

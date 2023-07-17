@@ -86,7 +86,7 @@ const LoginForm: FC = () => {
   return (
     <Spin spinning={isLoading}>
       <div className="login-page">
-        <Card>
+        <Card className="main_card_auth">
           <Form<LoginParams> onFinish={onFinished} className="login-page-form">
             <h2>Real Estate</h2>
             <Form.Item

@@ -1,13 +1,19 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Checkbox, Col, Divider, Form, Input, Row, Select, Tabs, Upload } from 'antd';
+import './style.less';
+
+import { MailOutlined, MobileOutlined, PhoneOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Checkbox, Col, Divider, Form, Input, message, Row, Select, Tabs, Upload } from 'antd';
 import { useEffect } from 'react';
+import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 
+import { resetPassword } from '@/api/user.api';
 import Avator from '@/assets/header/avator.jpeg';
 
 const { Option } = Select;
 
 const UserSettings = () => {
+  const mutateChangePassowrd = useMutation(resetPassword);
+  const { mutate: mutateRequest, isLoading } = mutateChangePassowrd;
   const userDetails = useSelector(state => state?.user?.userDetails);
   const [form] = Form.useForm();
 
@@ -57,11 +63,28 @@ const UserSettings = () => {
     'Mingora',
   ];
 
-  console.log(cities);
+  const OnFinsish = async (value: any) => {
+    const submitValues = {
+      ...value,
+
+      userId: userDetails?._id,
+    };
+
+    try {
+      await mutateRequest(submitValues, {
+        onSuccess: res => {
+          message.success('Successfully Reset Password');
+        },
+        onError: error => {
+          message.error('Some thing went wrong');
+        },
+      });
+    } catch (error) {}
+  };
 
   return (
     <div>
-      <Card className="mt-20">
+      <Card loading={isLoading}>
         <Tabs tabPosition="left" type="card" style={{ minHeight: '75vh' }}>
           <Tabs.TabPane tab="Profile" key={1}>
             <Row>
@@ -81,34 +104,34 @@ const UserSettings = () => {
               <Divider />
               <Col md={3}></Col>
               <Col md={16}>
-                <Card>
+                <Card className="main_card_auth">
                   <Form layout="vertical" form={form}>
                     <Row gutter={[16, 16]}>
                       <Col md={12}>
                         <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-                          <Input size="large" />
+                          <Input size="large" prefix={<UserOutlined />} />
                         </Form.Item>
                       </Col>
 
                       <Col md={12}>
                         <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-                          <Input size="large" disabled />
+                          <Input size="large" disabled prefix={<MailOutlined />} />
                         </Form.Item>
                       </Col>
                       <Col md={12}>
                         <Form.Item name="mobile" label="Mobile" rules={[{ required: true }]}>
-                          <Input size="large" />
+                          <Input size="large" prefix={<MobileOutlined />} />
                         </Form.Item>
                       </Col>
 
                       <Col md={12}>
                         <Form.Item name="landline" label="Land Line" rules={[{ required: true }]}>
-                          <Input size="large" />
+                          <Input size="large" prefix={<PhoneOutlined />} />
                         </Form.Item>
                       </Col>
                       <Col md={12}>
                         <Form.Item name="whatsApp" label="WhatsApp" rules={[{ required: true }]}>
-                          <Input size="large" />
+                          <Input size="large" prefix={<MobileOutlined />} />
                         </Form.Item>
                       </Col>
                       <Col md={24}>
@@ -173,7 +196,7 @@ const UserSettings = () => {
           </Tabs.TabPane>
           <Tabs.TabPane tab="Change Password" key={2}>
             <div className="flex justifyCenter alignCenter" style={{ height: '35vh' }}>
-              <Card title="Change Password" style={{ marginTop: '300px' }}>
+              <Card title="Change Password" style={{ marginTop: '300px' }} className="main_card_auth">
                 <Form layout="vertical">
                   <Row style={{ width: '500px' }}>
                     <Col md={24}>

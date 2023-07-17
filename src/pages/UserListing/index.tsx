@@ -155,7 +155,7 @@ const UserListing = () => {
   const totalItems = usersData?.data?.result?.meta?.totalItems;
 
   return (
-    <div className="mt-20">
+    <div>
       <Card
         title="User Listing"
         extra={
