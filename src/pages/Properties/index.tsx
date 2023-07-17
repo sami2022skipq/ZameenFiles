@@ -29,6 +29,7 @@ import {
   Switch,
   Tag,
 } from 'antd';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
@@ -107,6 +108,30 @@ const PropertyDetail = () => {
 
   const totalItems = 40;
 
+  const AnimatedListItem = ({ item }: any) => {
+    const variants = {
+      hidden: { opacity: 0, y: 20 },
+      visible: { opacity: 1, y: 0 },
+    };
+
+    return (
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={variants}
+        transition={{ duration: 0.2 }}
+        whileHover="visible"
+      >
+        <List.Item className="flex justifySpaceBetween">
+          <span>{item}</span>
+          <span>
+            <Rate tooltips={desc} onChange={setValue} value={value} />
+          </span>
+        </List.Item>
+      </motion.div>
+    );
+  };
+
   return (
     <Card>
       <Affix offsetTop={68}>
@@ -139,58 +164,72 @@ const PropertyDetail = () => {
               return (
                 <Col md={24} key={index}>
                   <Link to="/property/detail">
-                    <Card
-                      className="mt-20 main_card"
-                      title={
-                        <>
-                          <BankFilled className="mr-5" />
-                          {item?.societyName}
-                        </>
-                      }
+                    <motion.div
+                      whileHover={{ scale: 1.1, transition: { duration: 1.2 } }}
+                      whileTap={{ scale: 0.9 }}
+                      variants={{
+                        hidden: { opacity: 0, y: 75 },
+                        visible: { opacity: 1, y: 0 },
+                      }}
+                      initial="hidden"
+                      animate="visible"
                     >
-                      <Row gutter={[16, 16]}>
-                        <Col md={10}>
-                          <Carousel effect="fade" autoplay>
-                            {realEstateImages.map((image, index) => (
-                              <div key={index}>{renderSlideContent(image, index)}</div>
-                            ))}
-                          </Carousel>
-                        </Col>
+                      <Card
+                        className="mt-20 main_card"
+                        title={
+                          <>
+                            <BankFilled className="mr-5" />
+                            {item?.societyName}
+                          </>
+                        }
+                      >
+                        <Row gutter={[16, 16]}>
+                          <Col md={10}>
+                            <Carousel effect="fade" autoplay>
+                              {realEstateImages.map((image, index) => (
+                                <div key={index}>{renderSlideContent(image, index)}</div>
+                              ))}
+                            </Carousel>
+                          </Col>
 
-                        <Col md={14}>
-                          <span className="flex justifySpaceBetween">
-                            <p className="mr-10">
-                              {
-                                <>
-                                  <EnvironmentFilled className="mr-5" />
-                                  <b>{item?.location}</b>
-                                </>
-                              }
-                            </p>
-                            <p className="ml-10">
-                              <NumberOutlined className="mr-5" />
-                              <b>Plot No: {item?.plotNumber}</b>
-                            </p>
-                          </span>
-                          <h3>Area-{item?.area} Marla</h3>
-                          <Divider />
-                          <span className="flex">
-                            <Tag color="green">Dream Apt</Tag>
-                            <Tag color="green">Dream Apt</Tag>
-                            <Tag color="green">Dream Apt</Tag>
-                            <Tag color="green">Dream Apt</Tag>
-                          </span>
-                          <Divider />
-                          <span className="flex mt-10">
-                            <b>
-                              {' '}
-                              Balloted <Divider type="vertical" />
-                            </b>
-                            <b>
-                              {' '}
-                              {item?.balloted !== true ? <Tag color="red">No</Tag> : <Tag color="green">Yes</Tag>}{' '}
-                            </b>{' '}
-                            {/* <b>
+                          <Col md={14}>
+                            <span className="flex justifySpaceBetween">
+                              <p className="mr-10">
+                                {
+                                  <>
+                                    <EnvironmentFilled className="mr-5" />
+                                    <b>{item?.location}</b>
+                                  </>
+                                }
+                              </p>
+                              <p className="ml-10">
+                                <NumberOutlined className="mr-5" />
+                                <b>Plot No: {item?.plotNumber}</b>
+                              </p>
+                            </span>
+                            <h3>Area-{item?.area} Marla</h3>
+                            <Divider />
+                            <span className="flex">
+                              <Tag color="green">Dream Apt</Tag>
+                              <Tag color="green">Dream Apt</Tag>
+                              <Tag color="green">Dream Apt</Tag>
+                              <Tag color="green">Dream Apt</Tag>
+                            </span>
+                            <Divider />
+                            <span className="flex mt-10">
+                              <b>
+                                {' '}
+                                Balloted <Divider type="vertical" />
+                              </b>
+                              <b>
+                                {' '}
+                                {item?.balloted !== true ? (
+                                  <Tag color="red">No</Tag>
+                                ) : (
+                                  <Tag color="green">Yes</Tag>
+                                )}{' '}
+                              </b>{' '}
+                              {/* <b>
                               {' '}
                               Residential <Divider type="vertical" />
                             </b>
@@ -198,39 +237,40 @@ const PropertyDetail = () => {
                               {' '}
                               commercial <Divider type="vertical" />
                             </b> */}
-                          </span>
-                        </Col>
-                        <Col md={24} className="mt-20">
-                          <div className="flex justifySpaceBetween card_bottom">
-                            <span>
-                              <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{' '}
-                              <span className="mt-10">Riaz ahmad khan</span>
                             </span>
-                            <span>
-                              <div className="flex mt-10">
-                                <Button
-                                  type="default"
-                                  className="btn_call_email"
-                                  onClick={() => (window.location.href = `tel:${item?.phoneNumber}`)}
-                                >
-                                  <PhoneFilled /> Call
-                                </Button>
-                                <Button
-                                  className="btn_call_email"
-                                  onClick={() => (window.location.href = `mailto:${item?.email}`)}
-                                >
-                                  <MailFilled /> Email
-                                </Button>
-                                <Button className="btn_whatsapp">
-                                  <MessageFilled />
-                                  WhatsApp
-                                </Button>
-                              </div>
-                            </span>
-                          </div>
-                        </Col>
-                      </Row>
-                    </Card>
+                          </Col>
+                          <Col md={24} className="mt-20">
+                            <div className="flex justifySpaceBetween card_bottom">
+                              <span>
+                                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />{' '}
+                                <span className="mt-10">Riaz ahmad khan</span>
+                              </span>
+                              <span>
+                                <div className="flex mt-10">
+                                  <Button
+                                    type="default"
+                                    className="btn_call_email"
+                                    onClick={() => (window.location.href = `tel:${item?.phoneNumber}`)}
+                                  >
+                                    <PhoneFilled /> Call
+                                  </Button>
+                                  <Button
+                                    className="btn_call_email"
+                                    onClick={() => (window.location.href = `mailto:${item?.email}`)}
+                                  >
+                                    <MailFilled /> Email
+                                  </Button>
+                                  <Button className="btn_whatsapp">
+                                    <MessageFilled />
+                                    WhatsApp
+                                  </Button>
+                                </div>
+                              </span>
+                            </div>
+                          </Col>
+                        </Row>
+                      </Card>
+                    </motion.div>
                   </Link>
                 </Col>
               );
@@ -251,7 +291,8 @@ const PropertyDetail = () => {
             </Col>
           </Row>
         </Col>
-        <Col md={6}>
+        <Col md={1} />
+        <Col md={5}>
           <List
             className="mt-20"
             size="large"
@@ -259,14 +300,7 @@ const PropertyDetail = () => {
             footer={null}
             bordered
             dataSource={data}
-            renderItem={item => (
-              <List.Item className="flex justifySpaceBetween">
-                <span>{item} </span>
-                <span>
-                  <Rate tooltips={desc} onChange={setValue} value={value} />
-                </span>
-              </List.Item>
-            )}
+            renderItem={item => <AnimatedListItem item={item} />}
           />
         </Col>
       </Row>
